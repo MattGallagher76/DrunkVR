@@ -13,19 +13,18 @@ public class BACScript : MonoBehaviour
 
     public bool isBlackout = false;
 
-    private DrunkEffectCanvasController drunkEffectController;
+    private CameraShake[] cameraShakeScripts;
+
+
 
     // Start is called before the first frame update
     void Start()
     {
         bac = 0.0f;
 
-        drunkEffectController = FindObjectOfType<DrunkEffectCanvasController>();
+        cameraShakeScripts = FindObjectsOfType<CameraShake>();
 
-        if (drunkEffectController != null)
-        {
-            EnableDrunkEffect();
-        }
+
     }
 
     // Update is called once per frame
@@ -34,7 +33,7 @@ public class BACScript : MonoBehaviour
         if (!isBlackout)
         {
             checkBAC();
-
+            UpdateCameraShakeIntensity();
         }
         
     }
@@ -76,13 +75,19 @@ public class BACScript : MonoBehaviour
 
     }
 
-    // Enable the drunk effect by enabling the DrunkEffectCanvasController
-    void EnableDrunkEffect()
+    void UpdateCameraShakeIntensity()
     {
-        // Start the drunk effect
-        drunkEffectController.enabled = true;  // Enable the controller for wobbling effect
-        drunkEffectController.SetEffectOpacity(0.5f);
+        // Loop through all CameraShake scripts in the scene and update their intensity
+        foreach (CameraShake shake in cameraShakeScripts)
+        {
+            if (shake != null)
+            {
+                shake.intensity = bac * 20;
+            }
+        }
     }
+
+
 
 
 }

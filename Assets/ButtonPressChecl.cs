@@ -7,14 +7,21 @@ public class ButtonPressChecl : MonoBehaviour
     public GameObject gb;
     public bool c;
 
+    private BACScript bacScript;
+
     // Update is called once per frame
     void Update()
     {
+        bacScript = FindObjectOfType<BACScript>();
+
         // Check if the A button on the right controller is pressed
         if (c || OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
         {
             Debug.Log("A button pressed on right controller");
-            gb.GetComponent<Renderer>().material.color = GetRandomColor();
+            //gb.GetComponent<Renderer>().material.color = GetRandomColor();
+
+            bacScript.updateBAC(0.01f);
+
         }
     }
 
