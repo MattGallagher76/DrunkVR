@@ -36,6 +36,9 @@ public class GameStateManager : MonoBehaviour
     public GameObject liqouriMessage;
     public GameObject keys;
     public GameObject phone;
+    public GameObject partyCrowd;
+    public GameObject friend;
+    public GameObject stranger;
     public Text endingText;
     public Vector3 targetPosition;
     public float moveDuration = 1.0f;
@@ -43,7 +46,7 @@ public class GameStateManager : MonoBehaviour
     private string[] texts = {
         "Sup bruh, want some?",    // 0
         "You did not eat.",                      // 1
-        "You ate.",                              // 2
+        "Cheesy.",                              // 2
         "Pregame? water is far right, beer middle, liquor left.", // 3
         "You chose water.",                      // 4
         "You chose liquor.",                     // 5
@@ -592,6 +595,17 @@ public class GameStateManager : MonoBehaviour
         keys.SetActive(false);
         phone.SetActive(false);
         uiText.text = "";
+
+        if(CurrentState == GameState.PregameDecision)
+        {
+            partyCrowd.SetActive(true);
+        }else if (CurrentState == GameState.PartyDrinkOffer)
+        {
+            stranger.SetActive(true);
+        }else if (CurrentState == GameState.StrangerOffer)
+        {
+            stranger.SetActive(false);
+        }
     }
 
     IEnumerator FadeBlackScreenInAndOut(GameState nextState)
