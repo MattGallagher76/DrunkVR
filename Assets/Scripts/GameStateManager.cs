@@ -82,6 +82,11 @@ public class GameStateManager : MonoBehaviour
     private BACScript bacScript;
     private SoundScript soundScript;
 
+    public void turnMusicOff()
+    {
+        StartCoroutine(soundScript.turnMusicOff());
+    }
+
 
     private void Awake()
     {
@@ -157,7 +162,7 @@ public class GameStateManager : MonoBehaviour
                 break;
 
             case GameState.PeerPressure:
-                currentIndex = 10;
+                currentIndex = 8;
                 soundScript.PlayPeerPressure();
                 StartCoroutine(ShowText(true));
                 EnableChoices();
@@ -230,6 +235,7 @@ public class GameStateManager : MonoBehaviour
         if (CurrentState == GameState.EatingDecision)
         {
             food.SetActive(true);
+            water.SetActive(true);
         }
         else if (CurrentState == GameState.PregameDecision || CurrentState == GameState.PartyDrinkOffer || CurrentState == GameState.PeerPressure)
         {
@@ -298,9 +304,15 @@ public class GameStateManager : MonoBehaviour
         DisableChoices();
       
         soundScript.PlayDrinkingSound();
-        
 
-        if (CurrentState == GameState.PregameDecision)
+        if (CurrentState == GameState.EatingDecision)
+        {
+            currentIndex = 1;
+            StartCoroutine(ShowText(true));
+            soundScript.PlayNoPizzaOffer();
+            StartCoroutine(WaitAndTransition(3f, GameState.PartyDrinkOffer));
+        }
+        else if (CurrentState == GameState.PregameDecision)
         {
             currentIndex = 4;
             StartCoroutine(ShowText(true));
@@ -325,6 +337,7 @@ public class GameStateManager : MonoBehaviour
 
     IEnumerator OnStrangerEnd()
     {
+        turnMusicOff();
         soundScript.PlayAmbulanceSound();
         Debug.Log("Entering StrangerEnd coroutine");
         DisableChoices();
@@ -349,6 +362,7 @@ public class GameStateManager : MonoBehaviour
 
     IEnumerator OnCrashEnd()
     {
+        turnMusicOff();
         Debug.Log("Entering CrashEnd coroutine");
         DisableChoices();
         currEnding = 2;
@@ -374,6 +388,7 @@ public class GameStateManager : MonoBehaviour
 
     IEnumerator OnSafeEnd()
     {
+        turnMusicOff();
         Debug.Log("Entering SafeEnd coroutine");
         DisableChoices();
         currEnding = 4;
@@ -399,6 +414,7 @@ public class GameStateManager : MonoBehaviour
 
     IEnumerator OnHangOverEnd()
     {
+        turnMusicOff();
         Debug.Log("Entering HangOverEnd coroutine");
         DisableChoices();
         currEnding = 3;
@@ -562,6 +578,7 @@ public class GameStateManager : MonoBehaviour
                     }
                     else if (hit.collider.gameObject == water)
                     {
+                        DisableChoices();
                         StartCoroutine(WaitAndTransition(3f, GameState.PeerPressure));
                     }
                 }

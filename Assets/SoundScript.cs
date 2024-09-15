@@ -76,6 +76,15 @@ public class SoundScript : MonoBehaviour
         partyMusicSource.pitch = Mathf.Lerp(1.0f, 0.8f, distortionFactor);  
     }
 
+    public IEnumerator turnMusicOff()
+    {
+        for(float t = 0; t < 2f; t += Time.deltaTime)
+        {
+            partyMusicSource.volume = (2f - t) / 2f;
+            yield return null;
+        }
+    }
+
     // Method to reset sound effects to normal (when BAC is low or sober)
     public void ResetSoundEffects()
     {
