@@ -41,7 +41,7 @@ public class GameStateManager : MonoBehaviour
     public float moveDuration = 1.0f;
 
     private string[] texts = {
-        "You haven't eaten anything all day.",    // 0
+        "Sup bruh, want some?",    // 0
         "You did not eat.",                      // 1
         "You ate.",                              // 2
         "Pregame? water is far right, beer middle, liquor left.", // 3
@@ -122,6 +122,7 @@ public class GameStateManager : MonoBehaviour
 
             case GameState.EatingDecision:
                 EnableChoices();
+                soundScript.PlayPizzaOffer();
                 break;
 
             case GameState.PregameDecision:
@@ -145,12 +146,14 @@ public class GameStateManager : MonoBehaviour
 
             case GameState.PeerPressure:
                 currentIndex = 10;
+                soundScript.PlayPeerPressure();
                 StartCoroutine(ShowText(true));
                 EnableChoices();
                 break;
 
             case GameState.DriveOrRideDecision:
                 currentIndex = 11;
+                soundScript.PlayRideOrDrive();
                 StartCoroutine(ShowText(true));
                 EnableChoices();
                 break;
@@ -255,12 +258,13 @@ public class GameStateManager : MonoBehaviour
         currentIndex = 2;
 
         soundScript.PlayEatingSound();
+        soundScript.PlayYesPizzaOffer();
 
         StartCoroutine(ShowText(true));
         StartCoroutine(WaitAndTransition(3f, GameState.PregameDecision));
     }
 
-    public void OnChooseOther()
+    public void OnNoEat()
     {
         Debug.Log("Player chose something else.");
         if (eatingiMessage != null)
@@ -268,6 +272,7 @@ public class GameStateManager : MonoBehaviour
             eatingiMessage.SetActive(true);
             StartCoroutine(MoveMessageUpwards(eatingiMessage));
         }
+        soundScript.PlayNoPizzaOffer();
         currentIndex = 1;
         DisableChoices();
         StartCoroutine(ShowText(true));
@@ -280,23 +285,29 @@ public class GameStateManager : MonoBehaviour
         currentIndex = 4;
         DisableChoices();
         StartCoroutine(ShowText(true));
+        soundScript.PlayDrinkingSound();
+        
 
         if (CurrentState == GameState.PregameDecision)
         {
+            soundScript.PlayNoToPreGame();
             StartCoroutine(WaitAndTransition(3f, GameState.PartyDrinkOffer));
         }
         else if (CurrentState == GameState.PartyDrinkOffer)
         {
+            soundScript.PlayNoToPartyDrink();
             StartCoroutine(WaitAndTransition(3f, GameState.StrangerOffer));
         }
         else if (CurrentState == GameState.PeerPressure)
         {
+            soundScript.PlayNoToPeerPressure();
             StartCoroutine(WaitAndTransition(3f, GameState.DriveOrRideDecision));
         }
     }
 
     IEnumerator OnStrangerEnd()
     {
+        soundScript.PlayAmbulanceSound();
         Debug.Log("Entering StrangerEnd coroutine");
         DisableChoices();
         currEnding = 0;
@@ -409,14 +420,17 @@ public class GameStateManager : MonoBehaviour
 
         if (CurrentState == GameState.PregameDecision)
         {
+            soundScript.PlayLiquorPreGame();
             StartCoroutine(WaitAndTransition(3f, GameState.PartyDrinkOffer));
         }
         else if (CurrentState == GameState.PartyDrinkOffer)
         {
+            soundScript.PlayLiquorPartyDrink();
             StartCoroutine(WaitAndTransition(3f, GameState.StrangerOffer));
         }
         else if (CurrentState == GameState.PeerPressure)
         {
+            soundScript.PlayYesToPeerPressure();
             StartCoroutine(WaitAndTransition(3f, GameState.DriveOrRideDecision));
         }
     }
@@ -430,6 +444,7 @@ public class GameStateManager : MonoBehaviour
 
         if (CurrentState == GameState.PregameDecision)
         {
+            soundScript.PlayBeerPreGame();
             if (beeriMessage != null)
             {
                 beeriMessage.SetActive(true);
@@ -439,6 +454,7 @@ public class GameStateManager : MonoBehaviour
         }
         else if (CurrentState == GameState.PartyDrinkOffer)
         {
+            soundScript.PlayBeerPartyDrink();
             if (beeriMessage != null)
             {
                 beeriMessage.SetActive(true);
@@ -448,6 +464,7 @@ public class GameStateManager : MonoBehaviour
         }
         else if (CurrentState == GameState.PeerPressure)
         {
+            soundScript.PlayYesToPeerPressure();
             StartCoroutine(WaitAndTransition(3f, GameState.DriveOrRideDecision));
         }
 
@@ -498,7 +515,7 @@ public class GameStateManager : MonoBehaviour
                 if (CurrentState == GameState.EatingDecision)
                 {
                     if (hit.collider.gameObject == food) OnEat();
-                    else if (hit.collider.gameObject == table) OnChooseOther();
+                    else if (hit.collider.gameObject == table) OnNoEat();
                 }
                 else if (CurrentState == GameState.PregameDecision || CurrentState == GameState.PartyDrinkOffer || CurrentState == GameState.PeerPressure)
                 {
@@ -521,6 +538,7 @@ public class GameStateManager : MonoBehaviour
                 {
                     if (hit.collider.gameObject == keys)
                     {
+                        soundScript.PlayYesToDrive();
 
                         if (bacScript.getBAC() > 0.08)
                         {
@@ -536,6 +554,7 @@ public class GameStateManager : MonoBehaviour
                     else if (hit.collider.gameObject == phone)
                     {
                         //GOOD SLEEP
+                        soundScript.PlayYesToRide();
 
                         if (bacScript.getBAC() <= 0.12)
                         {
@@ -626,7 +645,7 @@ public class GameStateManager : MonoBehaviour
         if (CurrentState == GameState.EatingDecision)
         {
             if (id == 1) OnEat();
-            else if (id == 0) OnChooseOther();
+            else if (id == 0) OnNoEat();
         }
         else if (CurrentState == GameState.PregameDecision || CurrentState == GameState.PartyDrinkOffer || CurrentState == GameState.PeerPressure)
         {
