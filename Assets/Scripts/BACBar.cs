@@ -26,7 +26,7 @@ public class BACBar : MonoBehaviour
     {
         float fillAmount = currentBAC / maxBAC;  // Calculate the percentage of BAC
         bacBarFill.fillAmount = fillAmount;  // Update the fill amount (range from 0 to 1)
-        Debug.Log("Updating BACBar fillAmount: " + fillAmount);
+        //Debug.Log("Updating BACBar fillAmount: " + fillAmount);
     }
 
    
