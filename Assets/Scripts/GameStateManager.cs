@@ -36,7 +36,7 @@ public class GameStateManager : MonoBehaviour
     public GameObject liqouriMessage;
     public GameObject keys;
     public GameObject phone;
-    public int BAC;
+    public BACScript bacScript;
     public Text endingText;
     public Vector3 targetPosition;
     public float moveDuration = 1.0f;
@@ -71,9 +71,11 @@ public class GameStateManager : MonoBehaviour
 
     private int currentIndex = 0;
     private int currEnding = 0;
+    
 
     private void Awake()
     {
+        
         if (Instance == null)
         {
             Instance = this;
@@ -83,7 +85,10 @@ public class GameStateManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+
     }
+
 
     private void Start()
     {
@@ -93,7 +98,6 @@ public class GameStateManager : MonoBehaviour
     private void Update()
     {
         HandleMouseInput();
-        HandleBlackOut();
     }
 
     public void ChangeState(GameState newState)
@@ -241,6 +245,8 @@ public class GameStateManager : MonoBehaviour
     public void OnEat()
     {
         Debug.Log("Player chose to eat.");
+        bacScript.ate = true;
+
         DisableChoices();
         currentIndex = 2;
         StartCoroutine(ShowText(true));
@@ -373,21 +379,12 @@ public class GameStateManager : MonoBehaviour
         StartCoroutine(ShowText(false));
     }
 
-    public void OnBlackOutEnd()
-    {
-        Debug.Log("Entering BlackoutEnd coroutine");
-        DisableChoices();
-        currEnding = 1;
-        blackScreen.SetActive(true);
-        endingText.text = endingTexts[1];
-
-        //StartCoroutine(ShowText(false));
-    }
 
 
     public void OnLiquor()
     {
         Debug.Log("Player chose liquor.");
+        bacScript.updateBAC(0.04f);
         if (liqouriMessage != null)
         {
             liqouriMessage.SetActive(true);
@@ -413,6 +410,7 @@ public class GameStateManager : MonoBehaviour
     public void OnBeer()
     {
         Debug.Log("Player chose beer.");
+        bacScript.updateBAC(0.02f);
         if (CurrentState == GameState.PregameDecision)
         {
             if (beeriMessage != null)
@@ -466,16 +464,7 @@ public class GameStateManager : MonoBehaviour
         rectTransform.anchoredPosition = targetYPosition;
     }
 
-    private void HandleBlackOut()
-    {
-        if(BAC >= 0.4)
-        {
-            StopAllCoroutines();
-            OnBlackOutEnd();
-
-        }
-
-    }
+    
 
 
     private void HandleMouseInput()
@@ -511,7 +500,8 @@ public class GameStateManager : MonoBehaviour
                 {
                     if(hit.collider.gameObject == keys)
                     {
-                        if (BAC >= 0.12)
+                        
+                        if (bacScript.getBAC() > 0.08)
                         {
                             StartCoroutine(OnCrashEnd());
                         }
@@ -519,12 +509,14 @@ public class GameStateManager : MonoBehaviour
                         {
                             StartCoroutine(OnSafeEnd());
                         }
+                        
 
                     }
                     else if (hit.collider.gameObject == phone)
                     {
                         //GOOD SLEEP
-                        if (BAC <= 0.12)
+                        
+                        if (bacScript.getBAC() <= 0.12)
                         {
                             StartCoroutine(OnSafeEnd());
 
@@ -534,6 +526,7 @@ public class GameStateManager : MonoBehaviour
                             StartCoroutine(OnHangOverEnd());
 
                         }
+                        
 
                         //HANGOVER
 
