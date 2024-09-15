@@ -71,10 +71,10 @@ public class GameStateManager : MonoBehaviour
     private string[] endingTexts =
     {
         "Game Over. Do not accept drinks from strangers.",
-        "You blacked out",
-        "You got in a car crash",
-        "You have bad hangover",
-        "you don;t have hangiver good job"
+        "Game Over. You blacked out.",
+        "Game Over. You got in a car crash.",
+        "You will have a bad hangover in the morning.",
+        "You sleep peacefully and wake up feeling good."
     };
 
     private int currentIndex = 0;
@@ -150,7 +150,8 @@ public class GameStateManager : MonoBehaviour
 
             case GameState.StrangerOffer:
                 Debug.Log("Entering StrangerOffer state");
-                currentIndex = 9;
+                soundScript.PlayStrangerOffer();
+                currentIndex = 16;
                 StartCoroutine(ShowText(true));
                 EnableChoices();
                 break;
