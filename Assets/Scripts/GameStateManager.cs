@@ -43,23 +43,29 @@ public class GameStateManager : MonoBehaviour
     public Vector3 targetPosition;
     public float moveDuration = 1.0f;
 
-    private string[] texts = {
-        "Sup bruh, want some?",    // 0
-        "You did not eat.",                      // 1
-        "Cheesy.",                              // 2
-        "Pregame? water is far right, beer middle, liquor left.", // 3
-        "You chose water.",                      // 4
-        "You chose liquor.",                     // 5
-        "You chose beer.",                       // 6
-        "You are at the party.",                 // 7
-        "Your friend offers you another drink.", // 8
-        "DRINK THIS OR ELSE.", // 9
-        "Your friends are pressuring you to drink.", // 10
-        "Do you want to drive home or take a ride?", // 11
-        "You crashed or woke up with a hangover.",  // 12
-        "The game is over." ,                    // 13
-        "Hey! Have a drink on me!",              //14
-        "GAME OVER DON'T ACCEPT DRINKS FROM STRANGERS",//15
+  private string[] texts = {
+        "Sup bruh, want some?",                        // 0 - Asking about food
+        "Your loss bro",                               // 1 - No food
+        "Chuu cheesy goodness",                        // 2 - Yes food
+        "Yo let's go to Chad's and pregame",           // 3 - Pregame offer
+        "Alright, I'll catch you at the party then",   // 4 - No to pregame
+        "You chose liquor.",                           // 5
+        "Alrighty, one last brewski for you",          // 6 - Beer at pregame
+        "Hey man where the drinks at? " +
+            "Let's get you a drink man",               // 7 - Party intro
+        "(Peer pressure)",                             // 8 - Peer Pressure
+        "Alright bro, should we drive or take an uber",// 9 - Drive question
+        "Alright man lets check out the F-150",        // 10 - Drive
+        "Alright bro, I'll catch you later",           // 11 - uber
+        "Oh yea my man!",                              // 12 - Liquour at party
+        "Niceeeee",                                    // 13 - Beer at party
+        "Oh yea my man!",                              // 14 - Liquour at pregame
+        "Alright, more for me then",                   // 15 - No to drink at party
+        "Uhh I got a drink just for you...",           // 16 - Creepy dude offer
+        "",                                            // 17 - Creepy yes 
+        "Oh, ok, not like I care",                     // 18 - Creepy no
+        "What - lame. Come on, let's go guys",         // 19 - Peer pressure no
+        "Yeaaah let's go my man!",                     // 20 - Peer pressure yes
     };
 
     private string[] endingTexts =
@@ -131,11 +137,13 @@ public class GameStateManager : MonoBehaviour
             case GameState.PregameDecision:
                 EnableChoices();
                 currentIndex = 3;
+                soundScript.PlayPreGameOffer();
                 StartCoroutine(ShowText(true));
                 break;
 
             case GameState.PartyDrinkOffer:
-                currentIndex = 14;
+                currentIndex = 7;
+                soundScript.PlayPartyDrinkOffer();
                 StartCoroutine(ShowText(true));
                 EnableChoices();
                 break;
@@ -285,24 +293,30 @@ public class GameStateManager : MonoBehaviour
     public void OnWater()
     {
         Debug.Log("Player chose water.");
-        currentIndex = 4;
+        
         DisableChoices();
-        StartCoroutine(ShowText(true));
+      
         soundScript.PlayDrinkingSound();
         
 
         if (CurrentState == GameState.PregameDecision)
         {
+            currentIndex = 4;
+            StartCoroutine(ShowText(true));
             soundScript.PlayNoToPreGame();
             StartCoroutine(WaitAndTransition(3f, GameState.PartyDrinkOffer));
         }
         else if (CurrentState == GameState.PartyDrinkOffer)
         {
+            currentIndex = 15;
+            StartCoroutine(ShowText(true));
             soundScript.PlayNoToPartyDrink();
             StartCoroutine(WaitAndTransition(3f, GameState.StrangerOffer));
         }
         else if (CurrentState == GameState.PeerPressure)
         {
+            currentIndex = 19;
+            StartCoroutine(ShowText(true));
             soundScript.PlayNoToPeerPressure();
             StartCoroutine(WaitAndTransition(3f, GameState.DriveOrRideDecision));
         }
@@ -416,23 +430,29 @@ public class GameStateManager : MonoBehaviour
             liqouriMessage.SetActive(true);
             StartCoroutine(MoveMessageUpwards(liqouriMessage));
         }
-        currentIndex = 5;
+       
         DisableChoices();
-        StartCoroutine(ShowText(true));
+       
         soundScript.PlayDrinkingSound();
 
         if (CurrentState == GameState.PregameDecision)
         {
+            currentIndex = 14;
+            StartCoroutine(ShowText(true));
             soundScript.PlayLiquorPreGame();
             StartCoroutine(WaitAndTransition(3f, GameState.PartyDrinkOffer));
         }
         else if (CurrentState == GameState.PartyDrinkOffer)
         {
+            currentIndex = 12;
+            StartCoroutine(ShowText(true));
             soundScript.PlayLiquorPartyDrink();
             StartCoroutine(WaitAndTransition(3f, GameState.StrangerOffer));
         }
         else if (CurrentState == GameState.PeerPressure)
         {
+            currentIndex = 20;
+            StartCoroutine(ShowText(true));
             soundScript.PlayYesToPeerPressure();
             StartCoroutine(WaitAndTransition(3f, GameState.DriveOrRideDecision));
         }
@@ -447,6 +467,9 @@ public class GameStateManager : MonoBehaviour
 
         if (CurrentState == GameState.PregameDecision)
         {
+            currentIndex = 6;
+            StartCoroutine(ShowText(true));
+           
             soundScript.PlayBeerPreGame();
             if (beeriMessage != null)
             {
@@ -457,6 +480,8 @@ public class GameStateManager : MonoBehaviour
         }
         else if (CurrentState == GameState.PartyDrinkOffer)
         {
+            currentIndex = 13;
+            StartCoroutine(ShowText(true));
             soundScript.PlayBeerPartyDrink();
             if (beeriMessage != null)
             {
@@ -467,6 +492,8 @@ public class GameStateManager : MonoBehaviour
         }
         else if (CurrentState == GameState.PeerPressure)
         {
+            currentIndex = 20;
+            StartCoroutine(ShowText(true));
             soundScript.PlayYesToPeerPressure();
             StartCoroutine(WaitAndTransition(3f, GameState.DriveOrRideDecision));
         }
@@ -542,6 +569,8 @@ public class GameStateManager : MonoBehaviour
                     if (hit.collider.gameObject == keys)
                     {
                         soundScript.PlayYesToDrive();
+                        currentIndex = 10;
+                        StartCoroutine(ShowText(true));
 
                         if (bacScript.getBAC() > 0.08)
                         {
@@ -558,6 +587,8 @@ public class GameStateManager : MonoBehaviour
                     {
                         //GOOD SLEEP
                         soundScript.PlayYesToRide();
+                        currentIndex = 11;
+                        StartCoroutine(ShowText(true));
 
                         if (bacScript.getBAC() <= 0.12)
                         {
