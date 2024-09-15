@@ -22,10 +22,12 @@ public class SoundScript : MonoBehaviour
     public AudioSource yesToPizzaOffer;
     public AudioSource noToPizzaOffer;
     public AudioSource preGameOffer;
-    public AudioSource yesToPreGame;
+    public AudioSource beerPreGame;
+    public AudioSource liquorPreGame;
     public AudioSource noToPreGame;
     public AudioSource partyDrinkOffer;
-    public AudioSource yesToPartyDrinkOffer;
+    public AudioSource beerPartyDrink;
+    public AudioSource liquorPartyDrink;
     public AudioSource noToPartyDrinkOffer;
     public AudioSource strangerOffer;
     public AudioSource yesToStrangerOffer;
@@ -175,13 +177,22 @@ public class SoundScript : MonoBehaviour
         }
     }
 
-    public void PlayYesToPreGame()
+    public void PlayLiquorPreGame()
     {
-        if (yesToPreGame != null)
+        if (liquorPreGame != null)
         {
-            yesToPreGame.Play();
+            liquorPreGame.Play();
         }
     }
+
+    public void PlayBeerPreGame()
+    {
+        if (beerPreGame != null)
+        {
+            beerPreGame.Play();
+        }
+    }
+
 
     public void PlayNoToPreGame()
     {
@@ -207,11 +218,19 @@ public class SoundScript : MonoBehaviour
         }
     }
 
-    public void PlayYesToPartyDrink()
+    public void PlayBeerPartyDrink()
     {
-        if (yesToPartyDrinkOffer != null)
+        if (beerPartyDrink != null)
         {
-            yesToPartyDrinkOffer.Play();
+            beerPartyDrink.Play();
+        }
+    }
+
+    public void PlayLiquorPartyDrink()
+    {
+        if (liquorPartyDrink != null)
+        {
+            liquorPartyDrink.Play();
         }
     }
 
