@@ -20,7 +20,7 @@ public class GameStateManager : MonoBehaviour
         HangOverEnd,
         End,
     }
-
+    public Camera MainCamera;
     public static GameStateManager Instance { get; private set; }
     public GameState CurrentState { get; private set; }
 
@@ -36,7 +36,6 @@ public class GameStateManager : MonoBehaviour
     public GameObject liqouriMessage;
     public GameObject keys;
     public GameObject phone;
-    public BACScript bacScript;
     public Text endingText;
     public Vector3 targetPosition;
     public float moveDuration = 1.0f;
@@ -71,10 +70,14 @@ public class GameStateManager : MonoBehaviour
 
     private int currentIndex = 0;
     private int currEnding = 0;
+    private BACScript bacScript;
+    private SoundScript soundScript;
     
 
     private void Awake()
     {
+        bacScript = MainCamera.GetComponent<BACScript>();
+        soundScript = MainCamera.GetComponent<SoundScript>();
         
         if (Instance == null)
         {
@@ -222,6 +225,7 @@ public class GameStateManager : MonoBehaviour
         else if (CurrentState == GameState.StrangerOffer)
         {
             beer.SetActive(true);
+            water.SetActive(true);
         }
         else if (CurrentState == GameState.DriveOrRideDecision)
         {
@@ -249,6 +253,9 @@ public class GameStateManager : MonoBehaviour
 
         DisableChoices();
         currentIndex = 2;
+
+        soundScript.PlayEatingSound();
+
         StartCoroutine(ShowText(true));
         StartCoroutine(WaitAndTransition(3f, GameState.PregameDecision));
     }
@@ -330,6 +337,10 @@ public class GameStateManager : MonoBehaviour
             yield return null;
         }
 
+        soundScript.PlayDrivingAwaySound();
+        soundScript.PlayCrashSound();
+        soundScript.PlayAmbulanceSound();
+
         StartCoroutine(ShowText(false));
     }
 
@@ -352,6 +363,8 @@ public class GameStateManager : MonoBehaviour
             blackImage.color = color;
             yield return null;
         }
+
+        soundScript.PlayMorningBirdsSound();
 
         StartCoroutine(ShowText(false));
     }
@@ -393,6 +406,8 @@ public class GameStateManager : MonoBehaviour
         currentIndex = 5;
         DisableChoices();
         StartCoroutine(ShowText(true));
+        soundScript.PlayDrinkingSound();
+
         if (CurrentState == GameState.PregameDecision)
         {
             StartCoroutine(WaitAndTransition(3f, GameState.PartyDrinkOffer));
@@ -411,6 +426,9 @@ public class GameStateManager : MonoBehaviour
     {
         Debug.Log("Player chose beer.");
         bacScript.updateBAC(0.02f);
+
+        soundScript.PlayDrinkingSound();
+
         if (CurrentState == GameState.PregameDecision)
         {
             if (beeriMessage != null)
@@ -492,7 +510,7 @@ public class GameStateManager : MonoBehaviour
                     if (hit.collider.gameObject == beer)
                     {
                         StartCoroutine(OnStrangerEnd());
-                    }else if (hit.collider.gameObject == table)
+                    }else if (hit.collider.gameObject == water)
                     {
                         StartCoroutine(WaitAndTransition(3f, GameState.PeerPressure));
                     }
