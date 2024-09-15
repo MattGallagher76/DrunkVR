@@ -72,13 +72,13 @@ public class GameStateManager : MonoBehaviour
     private int currEnding = 0;
     private BACScript bacScript;
     private SoundScript soundScript;
-    
+
 
     private void Awake()
     {
         bacScript = MainCamera.GetComponent<BACScript>();
         soundScript = MainCamera.GetComponent<SoundScript>();
-        
+
         if (Instance == null)
         {
             Instance = this;
@@ -100,7 +100,7 @@ public class GameStateManager : MonoBehaviour
 
     private void Update()
     {
-        HandleMouseInput();
+        //HandleMouseInput();
     }
 
     public void ChangeState(GameState newState)
@@ -199,7 +199,7 @@ public class GameStateManager : MonoBehaviour
                 yield return new WaitForSeconds(0.05f);
             }
         }
-
+        Debug.Log("AHHHHH");
 
         if (currentIndex == 0)
         {
@@ -288,7 +288,8 @@ public class GameStateManager : MonoBehaviour
         else if (CurrentState == GameState.PartyDrinkOffer)
         {
             StartCoroutine(WaitAndTransition(3f, GameState.StrangerOffer));
-        }else if (CurrentState == GameState.PeerPressure)
+        }
+        else if (CurrentState == GameState.PeerPressure)
         {
             StartCoroutine(WaitAndTransition(3f, GameState.DriveOrRideDecision));
         }
@@ -482,7 +483,7 @@ public class GameStateManager : MonoBehaviour
         rectTransform.anchoredPosition = targetYPosition;
     }
 
-    
+
 
 
     private void HandleMouseInput()
@@ -510,15 +511,17 @@ public class GameStateManager : MonoBehaviour
                     if (hit.collider.gameObject == beer)
                     {
                         StartCoroutine(OnStrangerEnd());
-                    }else if (hit.collider.gameObject == water)
+                    }
+                    else if (hit.collider.gameObject == water)
                     {
                         StartCoroutine(WaitAndTransition(3f, GameState.PeerPressure));
                     }
-                }else if(CurrentState == GameState.DriveOrRideDecision)
+                }
+                else if (CurrentState == GameState.DriveOrRideDecision)
                 {
-                    if(hit.collider.gameObject == keys)
+                    if (hit.collider.gameObject == keys)
                     {
-                        
+
                         if (bacScript.getBAC() > 0.08)
                         {
                             StartCoroutine(OnCrashEnd());
@@ -527,13 +530,13 @@ public class GameStateManager : MonoBehaviour
                         {
                             StartCoroutine(OnSafeEnd());
                         }
-                        
+
 
                     }
                     else if (hit.collider.gameObject == phone)
                     {
                         //GOOD SLEEP
-                        
+
                         if (bacScript.getBAC() <= 0.12)
                         {
                             StartCoroutine(OnSafeEnd());
@@ -544,7 +547,7 @@ public class GameStateManager : MonoBehaviour
                             StartCoroutine(OnHangOverEnd());
 
                         }
-                        
+
 
                         //HANGOVER
 
@@ -609,5 +612,74 @@ public class GameStateManager : MonoBehaviour
     {
         Debug.Log($"Initiating scene transition to {nextState}");
         StartCoroutine(FadeBlackScreenInAndOut(nextState));
+    }
+
+
+    //0 == Water
+    //1 == Pizza
+    //2 == Beer
+    //3 == Wiskey
+    //4 == Phone
+    //5 == Keys
+    public void itemGrabbed(int id)
+    {
+        if (CurrentState == GameState.EatingDecision)
+        {
+            if (id == 1) OnEat();
+            else if (id == 0) OnChooseOther();
+        }
+        else if (CurrentState == GameState.PregameDecision || CurrentState == GameState.PartyDrinkOffer || CurrentState == GameState.PeerPressure)
+        {
+            if (id == 0) OnWater();
+            else if (id == 3) OnLiquor();
+            else if (id == 2) OnBeer();
+        }
+        else if (CurrentState == GameState.StrangerOffer)
+        {
+            if (id == 2)
+            {
+                StartCoroutine(OnStrangerEnd());
+            }
+            else if (id == 0)
+            {
+                StartCoroutine(WaitAndTransition(3f, GameState.PeerPressure));
+            }
+        }
+        else if (CurrentState == GameState.DriveOrRideDecision)
+        {
+            if (id == 5)
+            {
+
+                if (bacScript.getBAC() > 0.08)
+                {
+                    StartCoroutine(OnCrashEnd());
+                }
+                else //drive home
+                {
+                    StartCoroutine(OnSafeEnd());
+                }
+
+
+            }
+            else if (id == 4)
+            {
+                //GOOD SLEEP
+
+                if (bacScript.getBAC() <= 0.12)
+                {
+                    StartCoroutine(OnSafeEnd());
+
+                }
+                else
+                {
+                    StartCoroutine(OnHangOverEnd());
+
+                }
+
+
+                //HANGOVER
+
+            }
+        }
     }
 }
