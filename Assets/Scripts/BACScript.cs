@@ -15,6 +15,9 @@ public class BACScript : MonoBehaviour
 
     private CameraShake[] cameraShakeScripts;
 
+    private BACBar bacBar;
+
+
 
 
     // Start is called before the first frame update
@@ -22,8 +25,15 @@ public class BACScript : MonoBehaviour
     {
         bac = 0.0f;
 
+        bacBar = FindObjectOfType<BACBar>();
+
         cameraShakeScripts = FindObjectsOfType<CameraShake>();
 
+
+        if (bacBar != null)
+        {
+            bacBar.UpdateBAC(bac);  // Initialize the bar to 0
+        }
 
     }
 
@@ -34,6 +44,7 @@ public class BACScript : MonoBehaviour
         {
             checkBAC();
             UpdateCameraShakeIntensity();
+            bacBar.UpdateBAC(bac);
         }
         
     }
@@ -49,18 +60,18 @@ public class BACScript : MonoBehaviour
     {
         if (bac >= passOutThreshold)
         {
-            IniciateBlackout();
+          //  IniciateBlackout();
             
         }
     }
 
     //Black out sequence
-    void IniciateBlackout()
+   /* void IniciateBlackout()
     {
         Debug.Log("Blackout");
         FindObjectOfType<FadeToBlack>().StartFadeToBlack();
         isBlackout = true;
-    }
+    }*/
 
     public void updateBAC(float points)
     {
@@ -71,7 +82,15 @@ public class BACScript : MonoBehaviour
         }
 
         bac = bac + points;
+        
         Debug.Log("BAC is: " + bac);
+
+        if (bacBar != null)
+        {
+            bacBar.UpdateBAC(bac);
+        }
+
+
 
     }
 
