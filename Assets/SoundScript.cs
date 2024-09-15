@@ -18,6 +18,25 @@ public class SoundScript : MonoBehaviour
     public AudioSource eatingSound;
     public AudioSource drivingAwaySound;
     public AudioSource combinedCarCrash;
+    public AudioSource pizzaOffer;
+    public AudioSource yesToPizzaOffer;
+    public AudioSource noToPizzaOffer;
+    public AudioSource preGameOffer;
+    public AudioSource yesToPreGame;
+    public AudioSource noToPreGame;
+    public AudioSource partyDrinkOffer;
+    public AudioSource yesToPartyDrinkOffer;
+    public AudioSource noToPartyDrinkOffer;
+    public AudioSource strangerOffer;
+    public AudioSource yesToStrangerOffer;
+    public AudioSource noToStrangerOffer;
+    public AudioSource peerPressure;
+    public AudioSource yesToPeerPressure;
+    public AudioSource noToPeerPressure;
+    public AudioSource rideOrDrive;
+    public AudioSource yesToRide;
+    public AudioSource yesToDrive;
+
 
 
     private BACScript bacScript;
@@ -122,6 +141,152 @@ public class SoundScript : MonoBehaviour
             drivingAwaySound.Play();
         }
     }
+
+    public void PlayPizzaOffer()
+    {
+        if (pizzaOffer != null)
+        {
+            pizzaOffer.Play();
+        }
+    }
+
+    public void PlayYesPizzaOffer()
+    {
+        if (yesToPizzaOffer != null)
+        {
+            yesToPizzaOffer.Play();
+        }
+    }
+
+    public void PlayNoPizzaOffer()
+    {
+        if (noToPizzaOffer != null)
+        {
+            noToPizzaOffer.Play();
+        }
+    }
+
+
+    public void PlayPreGameOffer()
+    {
+        if (preGameOffer != null)
+        {
+            preGameOffer.Play();
+        }
+    }
+
+    public void PlayYesToPreGame()
+    {
+        if (yesToPreGame != null)
+        {
+            yesToPreGame.Play();
+        }
+    }
+
+    public void PlayNoToPreGame()
+    {
+        if (noToPreGame != null)
+        {
+            noToPreGame.Play();
+        }
+    }
+
+    public void PlayPartyDrinkOffer()
+    {
+        if (partyDrinkOffer != null)
+        {
+            partyDrinkOffer.Play();
+        }
+    }
+
+    public void PlayNoToPartyDrink()
+    {
+        if (noToPartyDrinkOffer != null)
+        {
+            noToPartyDrinkOffer.Play();
+        }
+    }
+
+    public void PlayYesToPartyDrink()
+    {
+        if (yesToPartyDrinkOffer != null)
+        {
+            yesToPartyDrinkOffer.Play();
+        }
+    }
+
+    public void PlayStrangerOffer()
+    {
+        if (strangerOffer != null)
+        {
+            strangerOffer.Play();
+        }
+    }
+
+    public void PlayYesToStrangerOffer()
+    {
+        if (yesToStrangerOffer != null)
+        {
+            yesToStrangerOffer.Play();
+        }
+    }
+
+    public void PlayNoToStrangerOffer()
+    {
+        if (noToStrangerOffer != null)
+        {
+            noToStrangerOffer.Play();
+        }
+    }
+
+    public void PlayPeerPressure()
+    {
+        if (peerPressure != null)
+        {
+            peerPressure.Play();
+        }
+    }
+
+    public void PlayYesToPeerPressure()
+    {
+        if (yesToPeerPressure != null)
+        {
+            yesToPeerPressure.Play();
+        }
+    }
+
+    public void PlayNoToPeerPressure()
+    {
+        if (yesToPeerPressure != null)
+        {
+            yesToPeerPressure.Play();
+        }
+    }
+
+    public void PlayRideOrDrive()
+    {
+        if (rideOrDrive != null)
+        {
+            rideOrDrive.Play();
+        }
+    }
+
+    public void PlayYesToDrive()
+    {
+        if (yesToDrive != null)
+        {
+            yesToDrive.Play();
+        }
+    }
+
+    public void PlayYesToRide()
+    {
+        if (yesToRide != null)
+        {
+            yesToRide.Play();
+        }
+    }
+
 
 
 }
