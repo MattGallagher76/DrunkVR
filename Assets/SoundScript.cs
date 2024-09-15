@@ -17,6 +17,7 @@ public class SoundScript : MonoBehaviour
     public AudioSource drinkingSound;
     public AudioSource eatingSound;
     public AudioSource drivingAwaySound;
+    public AudioSource combinedCarCrash;
 
 
     private BACScript bacScript;
@@ -66,6 +67,14 @@ public class SoundScript : MonoBehaviour
         if (crashSound != null)
         {
             crashSound.Play();
+        }
+    }
+
+    public void PlayCombinedCrashSound()
+    {
+        if (crashSound != null)
+        {
+           combinedCarCrash.Play();
         }
     }
 

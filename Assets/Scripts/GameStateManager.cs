@@ -337,9 +337,7 @@ public class GameStateManager : MonoBehaviour
             yield return null;
         }
 
-        soundScript.PlayDrivingAwaySound();
-        soundScript.PlayCrashSound();
-        soundScript.PlayAmbulanceSound();
+        soundScript.PlayCombinedCrashSound();
 
         StartCoroutine(ShowText(false));
     }
@@ -469,6 +467,8 @@ public class GameStateManager : MonoBehaviour
         RectTransform rectTransform = message.GetComponent<RectTransform>();
         Vector2 startPosition = rectTransform.anchoredPosition;
         Vector2 targetYPosition = new Vector2(startPosition.x, targetPosition.y);
+
+        Debug.Log($"Moving {message.name} to {rectTransform.anchoredPosition}");
 
         float elapsedTime = 0;
 
